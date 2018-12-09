@@ -1,0 +1,33 @@
+version: '2'
+ 
+networks:
+  custom:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.61.0/28
+services:
+  jenkins:
+    image: jenkins
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      custom:
+        ipv4_address: 192.168.61.4
+    domainname: codespaces.io
+    hostname: jenkins
+    restart: always
+  artifactory:
+    image: docker.bintray.io/jfrog/artifactory-oss
+    ports:
+      - "8081:8081"
+    networks:
+      custom:
+        ipv4_address: 192.168.61.5
+    domainname: codespaces.io
+    hostname: artifactory
+    restart: always
